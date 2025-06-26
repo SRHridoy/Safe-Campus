@@ -1,0 +1,28 @@
+name: safe_campus
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.0
+
+ 
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase: ^9.0.3
+  firebase_core: ^3.13.1
+  firebase_auth: ^5.5.4
+  sensors_plus: ^3.0.0
+  cloud_firestore: ^5.6.8
+  flutter_sound: ^9.28.0
+  # geolocator: 
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
