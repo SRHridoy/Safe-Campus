@@ -98,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
                   onPressed: () {},
-                  child: Text('Register', style: TextStyle(fontSize: 18)),
+                  child: Text('Register', style: TextStyle(fontSize: 18,color: Colors.white)),
                 ),
               ),
             ],

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:safe_campus/screens/admin_screen.dart';
 import 'package:safe_campus/screens/login_screen.dart';
 import 'package:safe_campus/screens/register_screen.dart';
     import 'dart:async';
 
 import 'package:safe_campus/screens/splash_screen.dart';
+import 'package:safe_campus/screens/user_screen.dart';
 
     void main() {
       runApp(MyApp());
@@ -31,6 +33,8 @@ import 'package:safe_campus/screens/splash_screen.dart';
             '/': (context) => SplashScreen(),
             '/login': (context) => LoginScreen(),
             '/register': (context) => RegisterScreen(),
+            '/user': (context) => UserScreen(),
+            '/admin': (context) => AdminScreen(),
             // Add other routes here as needed
           },
           debugShowCheckedModeBanner: false,

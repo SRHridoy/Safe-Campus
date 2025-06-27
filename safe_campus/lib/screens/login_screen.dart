@@ -39,7 +39,9 @@ class LoginScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/admin');
+                  },
                   child: Text('Forgot Password?', style: TextStyle(color: Colors.green[700])),
                 ),
               ),
@@ -54,7 +56,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/user');
+                  },
                   child: Text('Login', style: TextStyle(fontSize: 18, color: Colors.white)),
                 ),
               ),

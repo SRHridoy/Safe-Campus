@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safe_campus/screens/login_screen.dart';
 
-import '../main.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
