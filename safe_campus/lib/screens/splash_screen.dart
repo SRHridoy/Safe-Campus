@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:safe_campus/screens/location_test_screen.dart';
 import 'package:safe_campus/screens/login_screen.dart';
+import 'package:safe_campus/screens/register_screen.dart';
 
 
 
@@ -16,7 +18,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => LoginScreen()),
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
       );
     });
   }
