@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:safe_campus/screens/login_screen.dart';
-
-
+import 'package:safe_campus/screens/user_screen.dart';
+import 'package:safe_campus/screens/admin_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,14 +11,41 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final storage = GetStorage();
+
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => LoginScreen()),
+    Timer(Duration(seconds: 2), _checkLoginStatus); // ✅ Timer শেষে redirect
+  }
+
+  void _checkLoginStatus() {
+    bool isLoggedIn = storage.read('isLoggedIn') ?? false;
+    String userType = storage.read('userType') ?? '';
+
+    if (isLoggedIn) {
+      if (userType == 'admin') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AdminScreen()),
+        );
+      } else if (userType == 'user') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      }
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
-    });
+    }
   }
 
   @override
@@ -46,10 +73,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: Colors.green[700],
               ),
             ),
+            SizedBox(height: 20),
+            CircularProgressIndicator(color: Colors.green),
           ],
         ),
       ),
     );
   }
 }
-

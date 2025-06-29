@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart'; // GetStorage import করো
 
 class EmergencyContacts extends StatelessWidget {
+  final storage = GetStorage(); // ✅ এখানে instance তৈরি করো
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -38,6 +40,27 @@ class EmergencyContacts extends StatelessWidget {
                       SizedBox(height: 8),
                       _buildInfoRow('Ambulance', '+8801711-998877', context),
                       Spacer(),
+
+                      // Logout Option
+                      Center(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            storage.erase(); // logout
+                            Navigator.pushReplacementNamed(context, '/login');
+                          },
+                          icon: Icon(Icons.logout),
+                          label: Text('Logout'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24),
                     ],
                   ),
                 ),

@@ -1,7 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:safe_campus/custom_widgets/custom_text_field.dart';
+import '../services/login_service.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final _loginService = LoginService();
+  final storage = GetStorage(); // ✅ GetStorage instance
+  bool _isLoading = false;
+
+  void login() async {
+    setState(() => _isLoading = true);
+
+    String? result = await _loginService.login(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    if (result == 'admin' || result == 'user') {
+
+      // ✅ Login সফল হলে ডেটা সেভ করো
+      storage.write('isLoggedIn', true);
+      storage.write('userType', result);
+
+      Navigator.pushReplacementNamed(context, '/$result'); // '/admin' or '/user'
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result ?? 'Login failed')),
+      );
+    }
+
+    if (mounted) setState(() => _isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +69,17 @@ class LoginScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, color: Colors.green[700]),
               ),
               SizedBox(height: 32),
-
-              CustomTextField(labelText: 'Email', prefixIcon: Icon(Icons.email, color: Colors.green)),
+              CustomTextField(
+                labelText: 'Email',
+                prefixIcon: Icon(Icons.email, color: Colors.green),
+                controller: emailController,
+              ),
               SizedBox(height: 16),
-              CustomTextField(labelText: 'Password', prefixIcon: Icon(Icons.lock, color: Colors.green)),
+              CustomTextField(
+                labelText: 'Password',
+                prefixIcon: Icon(Icons.lock, color: Colors.green),
+                controller: passwordController,
+              ),
               SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerRight,
@@ -48,7 +93,13 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: _isLoading
+                    ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  ),
+                )
+                    : ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
@@ -56,9 +107,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/user');
-                  },
+                  onPressed: login,
                   child: Text('Login', style: TextStyle(fontSize: 18, color: Colors.white)),
                 ),
               ),
@@ -69,7 +118,6 @@ class LoginScreen extends StatelessWidget {
                   Text("Don't have an account?", style: TextStyle(color: Colors.green[700])),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to register screen
                       Navigator.pushNamed(context, '/register');
                     },
                     child: Text('Create New Account', style: TextStyle(color: Colors.green)),
