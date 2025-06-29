@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:url_launcher/url_launcher.dart'; // ✅ Import url_launcher
+import 'package:url_launcher/url_launcher.dart';
 
 class EmergencyContacts extends StatelessWidget {
   final storage = GetStorage();

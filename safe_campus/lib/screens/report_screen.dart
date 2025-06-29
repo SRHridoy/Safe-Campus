@@ -66,7 +66,7 @@ class _ReportScreenState extends State<ReportScreen> {
         var jsonData = json.decode(utf8.decode(responseData));
         return jsonData['secure_url'];
       } else {
-        print('Failed to upload image: \\${response.statusCode}');
+        print('Failed to upload image: ${response.statusCode}');
         return null;
       }
     } catch (e) {
@@ -110,7 +110,6 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-
       backgroundColor: Colors.green[50],
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -141,7 +140,31 @@ class _ReportScreenState extends State<ReportScreen> {
                       _buildTextField("Mobile Number", "required", isPhone: true, controller: _phoneController),
                       Divider(height: 30, color: Colors.green[200]),
                       _buildTextField("Accused Student Name / ID", "required", controller: _accusedController),
-                      _buildTextField("Date & Time of Incident", "e.g., 25 June, 10:30AM", controller: _datetimeController),
+                      _buildTextField(
+                        "Date & Time of Incident",
+                        "e.g., 25 June, 10:30AM",
+                        controller: _datetimeController,
+                        readOnly: true,
+                        onTap: () async {
+                          final DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            final TimeOfDay? pickedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            if (pickedTime != null) {
+                              final formatted = "${pickedDate.day} ${_monthName(pickedDate.month)} ${pickedDate.year}, ${pickedTime.format(context)}";
+
+                              _datetimeController.text = formatted;
+                            }
+                          }
+                        },
+                      ),
                       _buildTextField("Location of Incident", "required", controller: _locationController),
                       _buildTextField("Detailed Description of Incident", "required", maxLines: 5, controller: _descController),
                     ],
@@ -165,9 +188,9 @@ class _ReportScreenState extends State<ReportScreen> {
                     children: [
                       _proofFile != null
                           ? ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.file(_proofFile!, height: 140, fit: BoxFit.cover),
-                            )
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(_proofFile!, height: 140, fit: BoxFit.cover),
+                      )
                           : Text("No evidence attached", style: TextStyle(color: Colors.green[700])),
                       SizedBox(height: 12),
                       ElevatedButton.icon(
@@ -201,14 +224,13 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                   child: _isLoading
                       ? Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                          ),
-                        )
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                    ),
+                  )
                       : Text("Submit Complaint", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ),
                 SizedBox(height: 12),
-                // Cancel button removed as requested
               ],
             ),
           ),
@@ -218,13 +240,19 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget _buildTextField(String label, String hint,
-      {bool isPhone = false, int maxLines = 1, TextEditingController? controller}) {
+      {bool isPhone = false,
+        int maxLines = 1,
+        TextEditingController? controller,
+        bool readOnly = false,
+        VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
         keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
         maxLines: maxLines,
+        readOnly: readOnly,
+        onTap: onTap,
         validator: (value) {
           if (value == null || value.isEmpty) return 'Please fill out this field';
           return null;
@@ -251,5 +279,13 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
       ),
     );
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month - 1];
   }
 }
