@@ -1,46 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:url_launcher/url_launcher.dart'; // ✅ Import url_launcher
 
 class EmergencyContacts extends StatelessWidget {
+  final storage = GetStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        backgroundColor: Colors.green[800],
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/home');
+          },
+        ),
+        title: Text('Emergency Contacts', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 24),
-                      Text(
-                        'Proctorial Body & Safety Contacts',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green[800]),
-                      ),
-                      SizedBox(height: 16),
-                      _buildInfoRow('Chief Proctor', '+8801711-123456', context),
-                      SizedBox(height: 8),
-                      _buildInfoRow('Proctor Office', '+8801711-654321', context),
-                      SizedBox(height: 8),
-                      _buildInfoRow('Security In-Charge', '+8801711-789012', context),
-                      SizedBox(height: 8),
-                      _buildInfoRow('Medical Center', '+8801711-345678', context),
-                      SizedBox(height: 8),
-                      _buildInfoRow('Police (Kawnia)', '999 or +8801711-112233', context),
-                      SizedBox(height: 8),
-                      _buildInfoRow('Fire Service', '199', context),
-                      SizedBox(height: 8),
-                      _buildInfoRow('Ambulance', '+8801711-998877', context),
-                      Spacer(),
-                    ],
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildSectionTitle('Proctor Section'),
+                  _buildFixedHeightCard(
+                    name: 'Prof. Dr. Md. Shamsuzzoha',
+                    designation: 'Proctor (Additional Charge)',
+                    phone: '+8801718617882',
+                    email: 'ms_zoha2006@yahoo.com',
                   ),
-                ),
+                  _buildFixedHeightCard(
+                    name: 'Prof. Rafia Akhtar',
+                    designation: 'Assistant Proctor',
+                    phone: '+8801727282204',
+                    email: 'rafia_mgthstu@yahoo.com',
+                  ),
+                  _buildFixedHeightCard(
+                    name: 'Prof. Dr. Abul Kalam',
+                    designation: 'Assistant Proctor',
+                    phone: '+8801718628988',
+                    email: 'akalamhstu@gmail.com',
+                  ),
+
+                  SizedBox(height: 24),
+                  _buildSectionTitle('Student Affairs & Advisory Division'),
+                  _buildFixedHeightCard(
+                    name: 'Prof. Dr. S.M. Emdadul Hassan',
+                    designation: 'Director',
+                    phone: '+8801713440465',
+                    email: 'emdadul.hassan@yahoo.com',
+                  ),
+                  _buildFixedHeightCard(
+                    name: 'Prof. Dr. Md. Abdul Alim',
+                    designation: 'Assistant Director',
+                    phone: '+8801714062618',
+                    email: 'alim@hstu.ac.bd',
+                  ),
+                  _buildFixedHeightCard(
+                    name: 'Prof. Dr. Md. Nizam Uddin',
+                    designation: 'Assistant Director',
+                    phone: '+8801712524222',
+                    email: 'nizam_hstu@yahoo.com',
+                  ),
+                  _buildFixedHeightCard(
+                    name: 'Md. Mahabur Rahman Chowdhury',
+                    designation: 'Deputy Director',
+                    phone: '+8801716696914',
+                    email: 'mahabur2015@gmail.com',
+                  ),
+                  _buildFixedHeightCard(
+                    name: 'Md. Zahidur Rahman Amin',
+                    designation: 'Section Officer',
+                    phone: '+8801712778400',
+                    email: 'zahidadminhstu@gmail.com',
+                  ),
+                  _buildFixedHeightCard(
+                    name: 'Md. Mamunur Rashid',
+                    designation: 'Section Officer',
+                    phone: '+8801717589749',
+                    email: 'mamun_dinajpur@yahoo.com',
+                  ),
+
+                  SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      storage.erase(); // logout
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                    icon: Icon(Icons.logout),
+                    label: Text('Logout'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -49,25 +112,60 @@ class EmergencyContacts extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, BuildContext context) {
-    double fontSize = MediaQuery.of(context).size.width < 350 ? 13 : 16;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 120,
-          child: Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
-          ),
+  Widget _buildSectionTitle(String title) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green[800]),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(fontSize: fontSize),
-          ),
-        ),
-      ],
+      ),
     );
+  }
+
+  Widget _buildFixedHeightCard({
+    required String name,
+    required String designation,
+    required String phone,
+    required String email,
+  }) {
+    return Card(
+      elevation: 3,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        color: Colors.blue.withOpacity(0),
+        width: double.infinity,
+        height: 150,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            SizedBox(height: 4),
+            Text(designation),
+            SizedBox(height: 6),
+            GestureDetector(
+              onTap: () => _makePhoneCall(phone),
+              child: Text(
+                '📞 $phone',
+                style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+              ),
+            ),
+            Text('✉️ $email'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _makePhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      print('Could not launch $phoneUri');
+    }
   }
 }

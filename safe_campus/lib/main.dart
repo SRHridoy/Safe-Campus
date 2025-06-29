@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:safe_campus/screens/admin_screen.dart';
-import 'package:safe_campus/screens/location_test_screen.dart';
 import 'package:safe_campus/screens/login_screen.dart';
 import 'package:safe_campus/screens/register_screen.dart';
+import 'package:safe_campus/screens/sos_screen.dart';
 import 'package:safe_campus/screens/splash_screen.dart';
 import 'package:safe_campus/screens/user_screen.dart';
 
@@ -15,6 +16,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -24,6 +26,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  final storage = GetStorage();
   static const platform = MethodChannel('com.example.safe_campus/sos');
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   bool _serviceRunning = false;
@@ -65,15 +68,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void _setupMethodChannel() {
     platform.setMethodCallHandler((call) async {
-      debugPrint("Method called: ${call.method}");
+      debugPrint("Method called: \\${call.method}");
+      final userType = storage.read('userType') ?? 'user';
       switch (call.method) {
         case 'sos_trigger':
-          if (!mounted || _isInEmergency) return;
+          if (!mounted || _isInEmergency || userType == 'admin') return;
           setState(() => _isInEmergency = true);
           _showEmergencyScreen();
           break;
         case 'sosTriggered':
-          if (!mounted || _isInEmergency) return;
+          if (!mounted || _isInEmergency || userType == 'admin') return;
           setState(() => _isInEmergency = true);
           _showEmergencyScreen();
           break;
@@ -89,8 +93,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_navigatorKey.currentState != null) {
         _navigatorKey.currentState!.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => LocationTestScreen()),
-          (route) => false,
+          MaterialPageRoute(builder: (_) =>  SosScreen()),
+              (route) => false,
         );
       }
     });
@@ -113,7 +117,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+
+    final bool isLoggedIn = storage.read('isLoggedIn') ?? false;
+    final String userType = storage.read('userType') ?? '';
+
+
+    String initialRoute;
+    if (isLoggedIn) {
+      if (userType == 'admin') {
+        initialRoute = '/admin';
+      } else if (userType == 'user') {
+        initialRoute = '/user';
+      } else {
+        initialRoute = '/login';
+      }
+    } else {
+      initialRoute = '/';
+    }
+
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: 'Safe Campus',
       theme: ThemeData(
         brightness: Brightness.light,
@@ -127,14 +150,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           backgroundColor: Colors.green,
         ),
       ),
-      initialRoute: '/',
+      initialRoute: initialRoute,
       routes: {
         '/': (context) => SplashScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/user': (context) => UserScreen(),
         '/admin': (context) => AdminScreen(),
-        // Add other routes here as needed
       },
       debugShowCheckedModeBanner: false,
     );

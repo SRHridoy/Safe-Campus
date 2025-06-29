@@ -37,6 +37,7 @@ dependencies:
   carousel_slider: ^5.1.1
   animated_notch_bottom_bar: ^1.0.3
   image_picker: ^1.1.2
+
   geolocator: ^13.0.4
   geocoding: ^4.0.0
   url_launcher: ^6.3.1
@@ -44,6 +45,9 @@ dependencies:
   firebase_auth: ^5.3.3
   cloud_firestore: ^5.3.0
   http: ^1.4.0
+  get_storage: ^2.1.1
+
+  flutter_local_notifications:
 
 
 dev_dependencies:
