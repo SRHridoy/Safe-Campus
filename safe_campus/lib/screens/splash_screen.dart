@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_campus/screens/location_test_screen.dart';
 import 'package:safe_campus/screens/login_screen.dart';
 import 'package:safe_campus/screens/register_screen.dart';
+import 'package:safe_campus/screens/sos_screen.dart';
 
 
 
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LoginScreen(),
+          builder: (context) => SosScreen(),
         ),
       );
     });
