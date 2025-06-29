@@ -16,64 +16,62 @@ class EmergencyContacts extends StatelessWidget {
               child: Column(
                 children: [
                   _buildSectionTitle('Proctor Section'),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Prof. Dr. Md. Shamsuzzoha',
                     designation: 'Proctor (Additional Charge)',
                     phone: '+8801718617882',
                     email: 'ms_zoha2006@yahoo.com',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Prof. Rafia Akhtar',
                     designation: 'Assistant Proctor',
                     phone: '+8801727282204',
                     email: 'rafia_mgthstu@yahoo.com',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Prof. Dr. Abul Kalam',
                     designation: 'Assistant Proctor',
                     phone: '+8801718628988',
                     email: 'akalamhstu@gmail.com',
                   ),
-
                   SizedBox(height: 24),
                   _buildSectionTitle('Student Affairs & Advisory Division'),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Prof. Dr. S.M. Emdadul Hassan',
                     designation: 'Director',
                     phone: '+8801713440465',
                     email: 'emdadul.hassan@yahoo.com',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Prof. Dr. Md. Abdul Alim',
                     designation: 'Assistant Director',
                     phone: '+8801714062618',
                     email: 'alim@hstu.ac.bd',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Prof. Dr. Md. Nizam Uddin',
                     designation: 'Assistant Director',
                     phone: '+8801712524222',
                     email: 'nizam_hstu@yahoo.com',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Md. Mahabur Rahman Chowdhury',
                     designation: 'Deputy Director',
                     phone: '+8801716696914',
                     email: 'mahabur2015@gmail.com',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Md. Zahidur Rahman Amin',
                     designation: 'Section Officer',
                     phone: '+8801712778400',
                     email: 'zahidadminhstu@gmail.com',
                   ),
-                  _buildFixedHeightCard(
+                  _buildContactCard(
                     name: 'Md. Mamunur Rashid',
                     designation: 'Section Officer',
                     phone: '+8801717589749',
                     email: 'mamun_dinajpur@yahoo.com',
                   ),
-
                   SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () {
@@ -106,13 +104,17 @@ class EmergencyContacts extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Text(
           title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green[800]),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.green[800],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildFixedHeightCard({
+  Widget _buildContactCard({
     required String name,
     required String designation,
     required String phone,
@@ -123,12 +125,11 @@ class EmergencyContacts extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
-        color: Colors.blue.withOpacity(0),
-        width: double.infinity,
-        height: 150,
+        width: double.infinity, // Full width of parent
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // Height adjusts automatically
           children: [
             Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             SizedBox(height: 4),
